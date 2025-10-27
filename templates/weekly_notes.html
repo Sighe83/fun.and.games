@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Ugenoter - Aula{% endblock %}
+
+{% block header_actions %}
+<a href="{{ url_for('logout') }}">Log ud</a>
+{% endblock %}
+
+{% block extra_css %}
+.children-info {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.children-info h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.child-item {
+    display: inline-block;
+    background: white;
+    padding: 8px 15px;
+    margin: 5px 10px 5px 0;
+    border-radius: 5px;
+    border: 2px solid #667eea;
+    color: #667eea;
+    font-weight: 500;
+}
+
+.week-section {
+    margin-bottom: 40px;
+}
+
+.week-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.week-header h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.week-header p {
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.events-container {
+    display: grid;
+    gap: 15px;
+}
+
+.event-card {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 20px;
+    border-radius: 5px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.event-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-title {
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.event-time {
+    color: #667eea;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.event-description {
+    color: #666;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+.event-description p {
+    margin: 5px 0;
+}
+
+.event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.no-events {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 16px;
+}
+
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+}
+{% endblock %}
+
+{% block content %}
+{% if children %}
+<div class="children-info">
+    <h3>Børn</h3>
+    {% for child in children %}
+    <span class="child-item">{{ child.name }} - {{ child.institution }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if current_week %}
+<div class="week-section">
+    <div class="week-header">
+        <h2>Denne uge (Uge {{ current_week.week_number }})</h2>
+        <p>{{ current_week.start_date|format_date }} - {{ current_week.end_date|format_date }}</p>
+    </div>
+
+    {% if current_week.events %}
+    <div class="events-container">
+        {% for event in current_week.events %}
+        <div class="event-card">
+            <div class="event-title">{{ event.title or 'Ingen titel' }}</div>
+
+            <div class="event-time">
+                {% if event.startDateTime %}
+                    {{ event.startDateTime|weekday }}, {{ event.startDateTime|format_datetime }}
+                    {% if event.endDateTime %}
+                        - {{ event.endDateTime|format_datetime }}
+                    {% endif %}
+                {% elif event.allDay %}
+                    Hele dagen
+                {% endif %}
+            </div>
+
+            {% if event.description %}
+            <div class="event-description">
+                {{ event.description|safe }}
+            </div>
+            {% endif %}
+
+            <div class="event-meta">
+                {% if event.location %}
+                <span>📍 {{ event.location }}</span>
+                {% endif %}
+                {% if event.creatorName %}
+                <span>👤 {{ event.creatorName }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-events">
+        Ingen noter for denne uge
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="error-message">
+    Kunne ikke hente noter for denne uge
+</div>
+{% endif %}
+
+{% if next_week %}
+<div class="week-section">
+    <div class="week-header">
+        <h2>Næste uge (Uge {{ next_week.week_number }})</h2>
+        <p>{{ next_week.start_date|format_date }} - {{ next_week.end_date|format_date }}</p>
+    </div>
+
+    {% if next_week.events %}
+    <div class="events-container">
+        {% for event in next_week.events %}
+        <div class="event-card">
+            <div class="event-title">{{ event.title or 'Ingen titel' }}</div>
+
+            <div class="event-time">
+                {% if event.startDateTime %}
+                    {{ event.startDateTime|weekday }}, {{ event.startDateTime|format_datetime }}
+                    {% if event.endDateTime %}
+                        - {{ event.endDateTime|format_datetime }}
+                    {% endif %}
+                {% elif event.allDay %}
+                    Hele dagen
+                {% endif %}
+            </div>
+
+            {% if event.description %}
+            <div class="event-description">
+                {{ event.description|safe }}
+            </div>
+            {% endif %}
+
+            <div class="event-meta">
+                {% if event.location %}
+                <span>📍 {{ event.location }}</span>
+                {% endif %}
+                {% if event.creatorName %}
+                <span>👤 {{ event.creatorName }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-events">
+        Ingen noter for næste uge
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="error-message">
+    Kunne ikke hente noter for næste uge
+</div>
+{% endif %}
+{% endblock %}

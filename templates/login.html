@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Aula Ugenoter{% endblock %}
+
+{% block extra_css %}
+.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-login:hover {
+    background: #5568d3;
+}
+
+.login-info {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+.login-info h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="login-form">
+    <h2 style="text-align: center; margin-bottom: 30px; color: #333;">Log ind på Aula</h2>
+
+    <form method="POST">
+        <div class="form-group">
+            <label for="username">Brugernavn (UNI-Login)</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Adgangskode</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn-login">Log ind</button>
+    </form>
+
+    <div class="login-info">
+        <h3>Information</h3>
+        <p>Log ind med din UNI-Login for at se ugenoter fra Aula.</p>
+        <p style="margin-top: 10px;">Efter login kan du se noter for denne uge og den kommende uge.</p>
+    </div>
+</div>
+{% endblock %}
